@@ -1,4 +1,4 @@
-#JVM General
+# JVM General
 
 ## 1. What is JVM
 
@@ -12,15 +12,15 @@
 
 ## 2. Relationship between JVM, JRE and JDK
 
-###2.1 JRE
+### 2.1 JRE
 
 * JRE means Java Runtime Environment. All java programs can only run under Java Runtime Environment. If we only need to run developed java program, installing JRE is enough.
 
-###2.2 JDK 
+### 2.2 JDK
 
 * JDK means Java Developing Kit, which is the kit for developers to compile and debug java programs. JDK itself is Java program as well so JDK depends on JRE. To maintain the independence and and integrity, JRE will be automatically installed when installing JDK.
 
-###2.3 JVM 
+### 2.3 JVM
 
 * JVM means Java Virtual Machine which is a part of JRE. It is a virtual machine implemented by simulating several functions of real machine on the machine. JVM has its own integrated hardware architecture like processor, stack and heap, register and its own instruction set. The main goal of using JVM is to achieve Java platform independent characteristic.
 
@@ -30,23 +30,23 @@
 
 Java compiler is JVM oriented designed whose job is to generate bytecode which can be understood by JVM. Java source code will be compiled into bytecode program, and JVM will interpret each instruction into platform specific machine code and run on different platform.
 
-![Java Compile Process](/Users/guoyifeng/Documents/myJava/JVM-Study/images/JavaCompileProcess.png)
+![Java Compile Process](images/JavaCompileProcess.png)
 
 ![](/Users/guoyifeng/Documents/myJava/JVM-Study/images/JVMCompileProcessChinese.jpg)
 
 ## 4. JVM Program Execution Process
 
-![Platform Independent Pricinple](/Users/guoyifeng/Documents/myJava/JVM-Study/images/java-program-execution.png)
+![Platform Independent Pricinple](images/java-program-execution.png)
 
-###4.1 JVM Execution Process:
+### 4.1 JVM Execution Process:
 
 * load .class file
 * manage and allocate memory space
 * execute garbage collection
 
-![JVM Execution Process](/Users/guoyifeng/Documents/myJava/JVM-Study/images/JVM_Architecture_Quora.jpeg)
+![JVM Execution Process](images/JVM_Architecture_Quora.jpeg)
 
-###4.2 Detailed Process for class loading:
+### 4.2 Detailed Process for class loading:
 
 * 4.2.1 Class Loader Sub System
 
@@ -120,17 +120,17 @@ Each JVM instance is corresponding to a Java program so it is **process** level
 
 ### 6.2 Simple Architecture of JVM 
 
-![](/Users/guoyifeng/Documents/myJava/JVM-Study/images/Simple-JVM-Architecture.jpeg)
+![](images/Simple-JVM-Architecture.jpeg)
 
 ### 6.3 Detailed Architecture of JVM
 
-![](/Users/guoyifeng/Documents/myJava/JVM-Study/images/JVM-Architecture.png)
+![](images/JVM-Architecture.png)
 
 ### 6.4 Three Sub System of JVM
 
-####**1. Class Loader Sub System**
+#### **1. Class Loader Sub System**
 
-Java's **dynamic class loading **functionality is handled by the class loader subsystem. It **loads**, **links, **and **initializes** the class file when it refers to a class for the first time at **runtime**, not **compile time.** 
+Java's **dynamic class loading** functionality is handled by the class loader subsystem. It **loads**, **links, **and **initializes** the class file when it refers to a class for the first time at **runtime**, not **compile time.** 
 
 - **Loading**: Classes will be loaded by this component. **Bootstrap Class Loader**, **Extension Class Loader**, and **Application Class Loader** are the three class loader which will help in achieving it.
 
@@ -155,7 +155,7 @@ Java's **dynamic class loading **functionality is handled by the class loader s
 
     
 
-####**2. Runtime Data Area**
+#### **2. Runtime Data Area**
 
 - **Method Area** – All the **class level data** will be stored here, including **static variables**. There is **only one** method area per JVM, and it is a shared resource. (Also the permanent generation for GC)
 - **Heap Area** – All the **Objects** and their corresponding **instance variables** and **arrays** will be stored here. There is also **only one** Heap Area per JVM. Since the **Method** and **Heap areas** share memory for multiple threads, the data stored is **NOT thread safe**.
@@ -166,7 +166,7 @@ Java's **dynamic class loading **functionality is handled by the class loader s
 - **PC Registers** – Each thread will have separate **PC Registers,** to hold the address of **current executing instruction** once the instruction is executed the PC register will be **updated** with the next instruction.
 - **Native Method stacks** – Native Method Stack holds native method information. **For every thread, a separate native method stack will be created**.
 
-####**3. Execution Engine**
+#### **3. Execution Engine**
 
 The bytecode which is assigned to the **Runtime Data Area** will be executed by the Execution Engine. The Execution Engine reads the bytecode and executes it piece by piece.
 
@@ -184,15 +184,15 @@ The bytecode which is assigned to the **Runtime Data Area** will be executed b
 
 
 
-##6.5 Garbage Collection
+## 6.5 Garbage Collection
 
 #### 6.5.1 Hotspot Heap Structure
 
-![](/Users/guoyifeng/Documents/myJava/JVM-Study/images/Hotspot-JVM-Heap.png)
+![](images/Hotspot-JVM-Heap.png)
 
 For the sake of Garbage collection Heap is divided into three main regions named as New Generation, Old or Tenured Generation, and Perm space.
 
-####6.5.2 Garbage Collection Basics
+#### 6.5.2 Garbage Collection Basics
 
 * Stop-the-world: it will happen in any GC algorithm. When stop-the-world happens, all the threads exception GC thread will stop their task until the GC task is completed.
 
@@ -239,7 +239,7 @@ For the sake of Garbage collection Heap is divided into three main regions named
 
   To handle these cases, there is something called the a "**card table**" in the old generation, which is a *512 byte chunk*. Whenever an object in the old generation references an object in the young generation, it is recorded in this table. When a GC is executed for the young generation, only this card table is searched to determine whether or not it is subject for GC, instead of checking the reference of all the objects in the old generation. This card table is managed with **write barrier**. This *write barrier* is a device that allows a faster performance for minor GC. Though a bit of overhead occurs because of this, the overall GC time is reduced. 
 
-   ![](/Users/guoyifeng/Documents/myJava/JVM-Study/images/card-table.png)
+   ![](images/card-table.png)
 
 
 
@@ -250,7 +250,85 @@ For the sake of Garbage collection Heap is divided into three main regions named
 * **Composition of the Young Generation**
 
   * The Young Generation is to store the objects which are created for the first time. And it is separated  into three parts:
+
     * One Eden Space
     * Two Survivor Spaces (S0, S1)
     * **The default ration for Eden and S0, S1 is : 8 : 1 : 1**
-  * 
+
+  * The order of execution process of each space:
+
+    * The majority of newly created objects are located in the Eden space.
+    * After one GC in the Eden space, the surviving objects are moved to one of the Survivor spaces. 
+    * After a GC in the Eden space, the objects are piled up into the Survivor space, where other surviving objects already exist. 
+    * Once a Survivor space is full, surviving objects are moved to the other Survivor space. Then, the Survivor space that is full will be changed to a state where there is no data at all.
+    * The objects that survived N (N = MaxTenuringThreshold which is 15 by default) steps that have been repeated a number of times are moved to the old generation.
+
+    TIPS:
+
+    **1. So one of the Survivor spaces must remain empty. If *data exists in both Survivor spaces, or the usage is 0 for both spaces*, then take that as a sign that something is wrong with your system**.
+
+    **2. Newly created objects are stored in Eden space and long time survived objects will be moved to old generation space.**
+
+    **3. There is exception that for some big object which needs a continuous memory space will be stored in the old generation directly and this usually happened when Survivor space is NOT enough.**
+
+    
+
+* Composition of the Old Generation
+
+  Only one space and objects in this space have less chance to be collected. So full GC will NOT happen as frequently as minor GC. And full GC takes longer time than minor GC (almost 10 times)
+
+  
+
+#### 6.5.3 Garbage Collection Algorithm
+
+* Search from the root: 
+
+  * Search from the root and traverse its neighbors. After searching, the unreached node can be collected.
+
+  ![](images/root-search.jpg)
+
+
+
+* Mark-and-Sweep:
+
+  * Mark-and-Sweep is to scan the root set and mark the living objects. After marking, then scan again on the whole space. All the unmarked objects will be collected.
+
+  * Mark-and-Sweep does not need to move the object and do nothing to the living objects. So it is very efficient when living objects are many. However, because it does nothing to the living objects but only sweep unmarked objects directly, there is a chance to make fragments in the memory
+
+    ![](images/Mark-and-Sweep.jpg)
+
+* Copy:
+
+  * Used in the young generation minor GC (Survivor Space 1 and Survivor Space 2)
+
+    ![](images/Copy.jpg)
+
+
+
+* Mark-and-Compact
+
+  * Used in the major GC
+
+  ![](images/Mark-and-Compact.jpg)
+
+
+
+#### 6.5.4 Garbage Collector Types  (Coming Soon)
+
+* **Serial（-XX:+UseSerialGC）**
+
+* **SerialOld（-XX:+UseSerialGC）**
+
+* **ParNew（-XX:+UseParNewGC）**
+
+* **ParallelScavenge（-XX:+UseParallelGC）**
+
+* **ParallelOld（-XX:+UseParallelOldGC）**
+
+* **CMS （-XX:+UseConcMarkSweepGC）**
+
+* **GarbageFirst（G1）**
+
+  
+
+   
