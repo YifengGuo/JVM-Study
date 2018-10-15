@@ -362,7 +362,7 @@ For the sake of Garbage collection Heap is divided into three main regions named
 
   - scanning those regions that contain the most garbage objects first, giving it its name (Garbage first).
 
-  - Better support for large heap size. utilizes multiple background threads to scan through the heap that it is**segmented into regions**, spanning from 1MB to 32MB (depending on the size of your heap)
+  - Better support for large heap size. utilizes multiple background threads to scan through the heap that it is **segmented into regions**, spanning from 1MB to 32MB (depending on the size of your heap)
 
   - This strategy reduced the chance of the heap being depleted before background threads have finished scanning for unused objects, in which case the collector will have to stop the application which will result in a STW collection.
 
