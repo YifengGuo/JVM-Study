@@ -351,7 +351,7 @@ For the sake of Garbage collection Heap is divided into three main regions named
 
     - Race condition occurs between collecting the young and old generations:
 
-           If the collector needs to promote young objects to the old generation, but hasn’t had enough time to make space clear it,  it will have to do so first which will result in a full STW collection, however, which is the very thing this CMS GC will prevent. 
+          If the collector needs to promote young objects to the old generation, but hasn’t had enough time to make space clear it,  it will have to do so first which will result in a full STW collection, however, which is the very thing this CMS GC will prevent. 
 
           To avoid this: Increase the size of old generation or the entire heap or allocate more background threads to the collector for him to compete with the rate of object allocation
 
