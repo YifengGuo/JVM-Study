@@ -80,8 +80,6 @@ Java compiler is JVM oriented designed whose job is to generate bytecode which c
 
          1. Next phase is **Resolution**. It is the process of replacing all symbolic references used in our class with original direct references from method area.
 
-      
-
   * Initialization
 
     * In Initialization activity, for class level static variables assigns original values and static blocks will be executed from top to bottom.
@@ -153,7 +151,6 @@ Java's **dynamic class loading** functionality is handled by the class loader s
 
   - Final phase of Class Loading, here all **static variables** will be assigned with the original values, and the **static block** will be executed.
 
-    
 
 #### **2. Runtime Data Area**
 
@@ -245,8 +242,6 @@ For the sake of Garbage collection Heap is divided into three main regions named
 
 * **The default ratio for Young Generation and Old Generation is 1 : 2**
 
-  
-
 * **Composition of the Young Generation**
 
   * The Young Generation is to store the objects which are created for the first time. And it is separated  into three parts:
@@ -271,13 +266,10 @@ For the sake of Garbage collection Heap is divided into three main regions named
 
     **3. There is exception that for some big object which needs a continuous memory space will be stored in the old generation directly and this usually happened when Survivor space is NOT enough.**
 
-    
-
 * Composition of the Old Generation
 
   Only one space and objects in this space have less chance to be collected. So full GC will NOT happen as frequently as minor GC. And full GC takes longer time than minor GC (almost 10 times)
 
-  
 
 #### 6.5.3 Garbage Collection Algorithm
 
@@ -313,22 +305,89 @@ For the sake of Garbage collection Heap is divided into three main regions named
 
 
 
-#### 6.5.4 Garbage Collector Types  (Coming Soon)
+#### 6.5.4 Garbage Collector Types
 
 * **Serial（-XX:+UseSerialGC）**
-
 * **SerialOld（-XX:+UseSerialGC）**
-
 * **ParNew（-XX:+UseParNewGC）**
-
 * **ParallelScavenge（-XX:+UseParallelGC）**
-
 * **ParallelOld（-XX:+UseParallelOldGC）**
-
 * **CMS （-XX:+UseConcMarkSweepGC）**
+* **GarbageFirst（*–XX:+UseG1GC*）**
 
-* **GarbageFirst（G1）**
 
-  
 
-   
+#### 6.5.5 Garbage Collectors used in JVM
+
+- **Serial Garbage Collector**
+  - Used in Single-Threaded environment and small heaps
+  - Downside:
+    - freezes all application threads whenever it’s working -> cannot be used in a server
+
+
+
+- **Parallel Garbage Collector**
+  - JVM's default Garbage Collector
+  - Uses **multiple** threads to scan through and **compact** the heap
+  - Suitable for apps which can tolerate application pauses
+  - Downside:
+    - It will stop application threads when performing either a minor or full GC collection (usually for seconds)
+
+
+
+- **CMS Garbage Collector** (Default GC for Java 7, Java 8)
+
+  - Use **"Concurrent-Mark-Sweep"** algorithm for its name
+
+  - CMS solved the problem of high pauses in major collection by doing the Marking concurrently.
+
+  - Enter the **Stop The World** (STW) mode in two cases:
+
+    1. **Initial Marking**: when initializing the initial marking of roots (objects in the old generation that are reachable from thread entry points or static variables) 
+    2. **Remark Pause**: when the application has changed the state of the heap while the algorithm was running concurrently, forcing it to go back and do some final touches to make sure it has the right objects marked.
+    3. Both in range of 100 -200 milliseconds pause which is reasonable for applications
+
+  - Downside:
+
+    - Race condition occurs between collecting the young and old generations:
+
+           If the collector needs to promote young objects to the old generation, but hasn’t had enough time to make space clear it,  it will have to do so first which will result in a full STW collection, however, which is the very thing this CMS GC will prevent. 
+
+          To avoid this: Increase the size of old generation or the entire heap or allocate more background threads to the collector for him to compete with the rate of object allocation
+
+    - High CPU resources use. Usually used where heap size <= 4GB. If more than 4 GB, try G1.
+
+
+- **G1 Garbage Collector** (Default GC for Java 9, Java 10)
+
+  - scanning those regions that contain the most garbage objects first, giving it its name (Garbage first).
+
+  - Better support for large heap size. utilizes multiple background threads to scan through the heap that it is**segmented into regions**, spanning from 1MB to 32MB (depending on the size of your heap)
+
+  - This strategy reduced the chance of the heap being depleted before background threads have finished scanning for unused objects, in which case the collector will have to stop the application which will result in a STW collection.
+
+  - G1 GC has another function called **String deduplication** which is to  identify strings which are duplicated more than once across your heap and correct them to point into the same internal char[] array, to avoid multiple copies of the same string from residing inefficiently within the heap.
+
+- **Z GC** (Introduced as default GC in Java 11)
+
+
+
+
+
+## References
+
+https://www.quora.com/How-does-JVM-works-internally
+
+https://zhuanlan.zhihu.com/p/25539690
+
+https://docs.oracle.com/javase/specs/jvms/se7/html/jvms-2.html
+
+https://dzone.com/articles/jvm-architecture-explained
+
+https://www.cubrid.org/blog/understanding-java-garbage-collection
+
+https://blog.takipi.com/garbage-collectors-serial-vs-parallel-vs-cms-vs-the-g1-and-whats-new-in-java-8/
+
+
+
+ 
